@@ -15,3 +15,7 @@ model Item {
     name     String  
     checked Boolean @default(false)
 }
+
+model Example {
+    id        String   @id @default(cuid())
+}
