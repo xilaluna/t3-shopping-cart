@@ -1,10 +1,13 @@
+import type { Item } from "@prisma/client";
+import { useState } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
-
+import ItemModal from "../components/ItemModal";
 import { api } from "../utils/api";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const [items, setItems] = useState<Item[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   return (
     <>
       <Head>
@@ -13,16 +16,26 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      {isModalOpen && <ItemModal setIsModalOpen={setIsModalOpen} />}
+
       <main className="max mx-auto my-10 max-w-2xl">
         <div className="flex justify-between">
           <h2 className="text-xl font-semibold">My Shopping List</h2>
           <button
             type="button"
+            onClick={() => setIsModalOpen(true)}
             className="rounded bg-violet-500 p-2 text-white"
           >
             Add to Shopping Cart
           </button>
         </div>
+        <ul>
+          {items.map((item) => (
+            <li key={item.id} className="flex justify-between">
+              <span>{item.name}</span>
+            </li>
+          ))}
+        </ul>
       </main>
     </>
   );
