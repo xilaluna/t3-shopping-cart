@@ -8,6 +8,7 @@ interface ItemModalProps {
 
 const ItemModal: FC<ItemModalProps> = ({ setIsModalOpen }) => {
   const [input, setInput] = useState<string>("");
+  const { mutate: addItem } = api.itemRouter.addItem.useMutation();
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-black/75">
       <div className="space-y-4 bg-white p-3">
@@ -28,7 +29,10 @@ const ItemModal: FC<ItemModalProps> = ({ setIsModalOpen }) => {
           </button>
           <button
             className="rounded-md bg-violet-500 p-2 text-white"
-            onClick={() => api.itemRouter.addItem.useMutation({ name: input })}
+            onClick={() => {
+              addItem({ name: input });
+              setIsModalOpen(false);
+            }}
           >
             Add to Shopping List
           </button>
