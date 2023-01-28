@@ -9,4 +9,7 @@ export const itemRouter = createTRPCRouter({
         data: { name: input.name, checked: false },
       });
     }),
+  getItems: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.item.findMany();
+  }),
 });
