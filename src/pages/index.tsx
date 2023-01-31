@@ -1,5 +1,5 @@
 import type { Item } from "@prisma/client";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import ItemModal from "../components/ItemModal";
@@ -8,6 +8,15 @@ import { api } from "../utils/api";
 const Home: NextPage = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  // const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { data: itemsData, isLoading } = api.itemRouter.getItems.useQuery({
+    onSuccess(items: SetStateAction<Item[]>) {
+      setItems(items);
+    },
+  });
+
+  if (itemsData || isLoading) return <p>Loading...</p>;
   return (
     <>
       <Head>
@@ -16,7 +25,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {isModalOpen && <ItemModal setIsModalOpen={setIsModalOpen} />}
+      {isModalOpen && (
+        <ItemModal setIsModalOpen={setIsModalOpen} setItems={setItems} />
+      )}
 
       <main className="max mx-auto my-10 max-w-2xl">
         <div className="flex justify-between">
@@ -31,7 +42,7 @@ const Home: NextPage = () => {
         </div>
         <ul>
           {items.map((item) => (
-            <li key={item.id} className="flex justify-between">
+            <li key={item.id} className="flex items-center justify-between">
               <span>{item.name}</span>
             </li>
           ))}

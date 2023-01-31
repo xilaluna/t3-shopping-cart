@@ -1,14 +1,21 @@
 import type { FC, Dispatch, SetStateAction } from "react";
+import type { Item } from "@prisma/client";
 import { useState } from "react";
 import { api } from "../utils/api";
 
 interface ItemModalProps {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  setItems: Dispatch<SetStateAction<Item[]>>;
 }
 
-const ItemModal: FC<ItemModalProps> = ({ setIsModalOpen }) => {
+const ItemModal: FC<ItemModalProps> = ({ setIsModalOpen, setItems }) => {
   const [input, setInput] = useState<string>("");
-  const { mutate: addItem } = api.itemRouter.addItem.useMutation();
+  const { mutate: addItem } = api.itemRouter.addItem.useMutation({
+    onSuccess(item) {
+      setItems((prev) => [...prev, item]);
+    },
+  });
+
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-black/75">
       <div className="space-y-4 bg-white p-3">
