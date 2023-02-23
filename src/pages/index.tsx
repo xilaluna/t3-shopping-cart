@@ -1,5 +1,5 @@
 import type { Item } from "@prisma/client";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import ItemModal from "../components/ItemModal";
@@ -10,13 +10,7 @@ const Home: NextPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const { data: itemsData, isLoading } = api.itemRouter.getItems.useQuery({
-    onSuccess(items: SetStateAction<Item[]>) {
-      setItems(items);
-    },
-  });
 
-  if (itemsData || isLoading) return <p>Loading...</p>;
   return (
     <>
       <Head>
